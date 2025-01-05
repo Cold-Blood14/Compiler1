@@ -11,7 +11,7 @@
 "tan"		  {return TAN; }
 "log"		  {return LOG; }
 "sqrt"		  {return SQRT; }
-[+\-*/\^()]	  {return yytext[0]; }
+[+\-*/\^\(\)\!]	  {return yytext[0]; }
 [ \t]		  {}
 \n		  { return '\n'; }
 .		  { printf("Unknown character: %s\n", yytext); }
