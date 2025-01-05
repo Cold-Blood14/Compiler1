@@ -5,24 +5,29 @@
 int yylex();
 void yyerror(const char *s);
 %}
+
 %union {
     double dval;
 }
 %token <dval> NUMBER
+
 %type <dval> expr
-%token SIN COS TAN LOG SQRT
+%token SIN COS TAN LOG SQRT 
 
 %left '+' '-'
 %left '*' '/'
+%left '!'
 %right '^'
 %right UMINUS 
-
 %%
-
 calculate :
     	calculate '\n'
-    |   calculate expr '\n' { printf("Result: %f\n", $2); }
-    |
+    	|   calculate expr '\n' { printf("Result: %f\n", $2); }
+	|   calculate error '\n' { 
+            yyerror("Invalid expression");
+            yyclearin;  
+        }
+	|   /*Epsilons*/
     ;
 expr : 
 	  expr '+' expr { $$ = $1 + $3; }
@@ -59,8 +64,19 @@ expr :
 			   }
 			}  
     | NUMBER 		{ $$ = $1; }
-    ;
-
+	| expr '!' {
+    			if ($1 < 0) {
+        		yyerror("Factorial of a negative number is undefined");
+       			 $$ = 0;
+   				} else {
+        		long long int x = 1;
+       			for (int i = 1; i <= (int)$1; i++) { 
+            	x = x * i;
+       			}
+        		$$ = x;
+    			}
+    		}
+	;
 %%
 
 int main(){
