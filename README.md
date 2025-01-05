@@ -5,5 +5,5 @@ open cmd then cd to file directory
 for parser
 >bison -d filename.y
 >flex same_filename.y
->gcc lex.yy.c add.tab.h
+>gcc lex.yy.c add.tab.c
 >a.exe
